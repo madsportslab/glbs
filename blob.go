@@ -51,37 +51,38 @@ func SetNamespace(namespace string) {
 	space = namespace
 } // SetNamespace
 
-func Put(file io.Reader) (string, error) {
+func Put(file io.Reader) *string {
   
 	data, err := ioutil.ReadAll(file)
 
 	if err != nil {
-		log.Println(err)
-		return "", errors.New("glbs Put(): unable to read file")
+		log.Printf("glbs Put(): %s", err)
+		return nil
 	}
 
   key := hash(data)
 
 	if len(key) == 0 {
-		return "", errors.New("glbs Put():")
+		return nil
 	}
 
 	if Exists(key) {
-		return key, errors.New("glbs Put(): blob exists")
+		log.Println("glbs Put(): blob exists")
+		return &key
 	} else {
 
 		bp, err := basepath(key)
 
 		if err != nil {
-			log.Println(err)
-			return "", errors.New("glbs Put():")
+			log.Printf("glbs Put(): %s", err)
+			return nil
 		}
 
 		errMk := os.MkdirAll(bp, 0755)
 
 		if errMk != nil {
-			log.Println(errMk)
-			return "", errors.New("glbs Put():")
+			log.Printf("glbs Put(): %s", errMk)
+			return nil
 		}
 
 		p, err := path(key)
@@ -91,18 +92,18 @@ func Put(file io.Reader) (string, error) {
 		defer blob.Close()
 
 		if errCreate != nil {
-			log.Println(errCreate)
-			return "", errors.New("glbs Put():")
+			log.Printf("glbs Put(): %s", errCreate)
+			return nil
 		}
 
 		_, errCopy := blob.Write(data)
 
 		if errCopy != nil {
-			log.Println(errCopy)
-			return "", errors.New("glbs Put():")
+			log.Printf("glbs Put(): %s", errCopy)
+			return nil
 		}
 
-		return key, nil
+		return &key
 
 	}
 

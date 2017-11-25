@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var key string
+var key *string
 
 func TestPut(t *testing.T) {
 
@@ -19,13 +19,13 @@ func TestPut(t *testing.T) {
 
   SetNamespace("vmw")
 
-  key, err = Put(file)
+  key = Put(file)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	if len(key) == 0 {
+	if len(*key) == 0 {
 		t.Error("Blob not stored.")
 	}
 
@@ -35,7 +35,7 @@ func TestGet(t *testing.T) {
 
 	SetNamespace("vmw")
 
-  buf, err := Get(key)
+  buf, err := Get(*key)
 
 	if err != nil {
 		t.Error(err)
@@ -63,7 +63,7 @@ func TestExists(t *testing.T) {
 
 	SetNamespace("vmw")
 
-  if !Exists(key) {
+  if !Exists(*key) {
 		t.Error("Blob not found, but should exist.")
 	}
 
