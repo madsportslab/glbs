@@ -137,16 +137,16 @@ func Get(key string) ([]byte, error) {
 
 } // Get
 
-func GetPath(key string) (string, error) {
+func GetPath(key string) *string {
 
   p, err := path(key)
 
 	if err != nil {
 		log.Println(err)
-		return "", errors.New("glbs Get(): no file found")
+		return nil
 	}
 
-	return p, nil
+	return &p
 
 } // GetPath
 
